@@ -10,14 +10,20 @@ import uvicorn
 from users.router import router as user_router, get_current_user
 from patients.router import router as patient_router
 from dotenv import load_dotenv
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
+# This finds the directory where main.py lives (src/)
+# .parent.parent moves up to the root (dr_fast_api/)
+base_path = Path(__file__).resolve().parent.parent
+static_dir = base_path / "frontend" / "static"
 
 load_dotenv() # Loading all the environment variables right here
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
 templates = Jinja2Templates(directory="./frontend/templates")
-app.mount("/static", StaticFiles(directory="./frontend/static"), name="static")
-
+app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(patient_router, prefix="/patients", tags=["patients"])
