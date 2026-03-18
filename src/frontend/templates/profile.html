@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DoctorFlow | Perfil</title>
+    <link rel="icon" type="image/png" href="/static/assets/DoctorFlow.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body
+    class="bg-gradient-to-br from-[#eef6ff] to-[#ffffff] relative min-h-screen overflow-x-hidden font-sans text-gray-800">
+
+    <!-- Decorative background blobs behind everything -->
+    <div
+        class="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-blue-300 opacity-20 blur-[100px] rounded-full pointer-events-none z-[-1]">
+    </div>
+    <div
+        class="absolute bottom-[-10%] right-[-5%] w-[35rem] h-[35rem] bg-indigo-300 opacity-10 blur-[120px] rounded-full pointer-events-none z-[-1]">
+    </div>
+
+    <!-- HEADER -->
+    <header class="bg-white shadow flex items-center justify-between px-6 py-4">
+
+        <div class="flex items-center gap-4">
+
+            <!-- HAMBURGER -->
+            <button id="menuButton" class="text-blue-600 text-2xl">
+                ☰
+            </button>
+
+            <h1 class="text-lg font-semibold">
+                Visão Geral
+            </h1>
+
+        </div>
+
+    </header>
+
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white transform -translate-x-full transition-transform duration-300 z-50 backdrop-blur-md shadow-2xl">
+
+        <!-- HEADER -->
+        <div class="flex items-center justify-between p-6 border-b border-blue-400">
+
+            <span class="font-bold text-xl">
+                DoctorFlow
+            </span>
+
+            <button id="closeSidebar" class="text-xl">
+                ✕
+            </button>
+
+        </div>
+
+        <!-- NAV -->
+        <nav class="p-6 space-y-4">
+
+            <a href="/main" class="block hover:bg-blue-500 p-2 rounded">
+                Pacientes
+            </a>
+            <a href="/dashboard" class="block hover:bg-blue-500 p-2 rounded">
+                DashBoard
+            </a>
+
+
+        </nav>
+
+        <!-- LOGOUT -->
+        <div class="absolute bottom-6 left-6">
+            <a href="/" class="text-red-200 hover:text-white">
+                Logout
+            </a>
+        </div>
+
+    </aside>
+
+
+
+    <!-- MAIN CONTENT -->
+    <main class="p-8 flex justify-center mt-10 relative z-10 animate-[slideIn_0.5s_ease-out]">
+
+        <!-- PROFILE CARD -->
+        <div
+            class="bg-white/80 backdrop-blur-xl w-[650px] rounded-2xl shadow-xl border border-white/60 p-10 relative overflow-hidden group">
+
+            <!-- Subtle accent inside card -->
+            <div
+                class="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full blur-2xl opacity-50 transform translate-x-10 -translate-y-10 group-hover:scale-110 transition-transform duration-500">
+            </div>
+
+            <div class="flex items-center gap-8 relative z-10 border-b border-gray-100 pb-8 mb-8">
+
+                <!-- USER INITIALS -->
+                <div
+                    class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-3xl font-bold shadow-lg ring-4 ring-blue-50 flex-shrink-0 relative">
+                    {{ user.username[:2].upper() }}
+
+                    <!-- Active Status Indicator -->
+                    <div class="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-4 border-white rounded-full">
+                    </div>
+                </div>
+
+                <!-- USER INFO -->
+                <div class="flex-1">
+
+                    <h2 class="text-2xl font-bold text-gray-800 tracking-tight mb-1">{{ user.username }}</h2>
+                    <p class="text-gray-500 text-sm mb-4 inline-flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        {{ user.email }}
+                    </p>
+
+                    <div
+                        class="inline-flex items-center mt-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold tracking-wide">
+                        Administrador
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex gap-4 relative z-10">
+
+                <button onclick="openEditModal()"
+                    class="flex-1 bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium hover:bg-gray-50 hover:text-blue-600 hover:border-blue-200 transition-all duration-200 flex justify-center items-center gap-2 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                        </path>
+                    </svg>
+                    Editar Perfil
+                </button>
+
+                <button onclick="openDeleteModal()"
+                    class="flex-1 bg-red-50 text-red-600 border border-red-100 px-6 py-3 rounded-xl font-medium hover:bg-red-600 hover:text-white transition-all duration-200 flex justify-center items-center gap-2 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg>
+                    Excluir Conta
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- EDIT MODAL -->
+    <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+
+        <div
+            class="bg-white/95 backdrop-blur-xl shadow-2xl w-[500px] p-8 rounded-2xl transform transition-all border border-blue-50">
+
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                    </path>
+                </svg>
+                Editar Perfil
+            </h2>
+
+            <form id="editUserForm" class="space-y-5">
+
+
+                <div>
+                    <label class="text-sm font-medium text-gray-600 block mb-1">
+                        Email
+                    </label>
+
+                    <input name="email" value="{{ user.email }}"
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-600 block mb-1">
+                        Username
+                    </label>
+
+                    <input name="username" value="{{ user.username }}"
+                        class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition">
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button id="closeBtn" type="button"
+                        onclick="document.getElementById('editModal').classList.add('hidden')"
+                        class="flex-1 bg-white border border-gray-300 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-50 transition font-medium">
+                        Cancelar
+                    </button>
+                    <button type="submit"
+                        class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition font-medium shadow-md hover:shadow-lg">
+                        Salvar Alterações
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+
+        <div class="bg-white/95 backdrop-blur-xl p-8 rounded-2xl w-[450px] text-center shadow-2xl border border-red-50">
+
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                    </path>
+                </svg>
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Excluir Conta</h3>
+
+            <p class="text-gray-500 mb-8">
+                Deseja realmente deletar sua conta? Esta ação é irreversível e todos os seus dados serão apagados
+                permanentemente.
+            </p>
+
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()"
+                    class="flex-1 bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-medium hover:bg-gray-50 transition">
+                    Cancelar
+                </button>
+
+                <button onclick="deleteAccount()"
+                    class="flex-1 bg-red-600 text-white px-4 py-3 rounded-xl font-medium shadow-md hover:bg-red-700 hover:shadow-lg transition">
+                    Sim, excluir conta
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        const sidebar = document.getElementById("sidebar")
+        const menuButton = document.getElementById("menuButton")
+        const closeSidebar = document.getElementById("closeSidebar")
+        const cancelUpdate = document.getElementById("cancelUpdate")
+
+        menuButton.onclick = () => {
+            sidebar.classList.remove("-translate-x-full")
+        }
+
+        closeSidebar.onclick = () => {
+            sidebar.classList.add("-translate-x-full")
+        }
+
+        cancelUpdate.onclick = () => {
+            cancelUpdate.classList.add('hidden')
+        }
+
+
+
+        /* EDIT MODAL */
+
+        function openEditModal() {
+            document.getElementById("editModal").classList.remove("hidden")
+        }
+
+
+
+        /* DELETE MODAL */
+
+        function openDeleteModal() {
+            document.getElementById("deleteModal").classList.remove("hidden")
+        }
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").classList.add("hidden")
+        }
+
+
+
+        /* UPDATE USER */
+
+        document
+            .getElementById("editUserForm")
+            .addEventListener("submit", async (event) => {
+
+                event.preventDefault()
+
+                const formData = new FormData(event.target)
+                const user_id = formData.get("id")
+
+                const response = await fetch(`/users/update/${user_id}`, {
+                    method: "PUT",
+                    body: formData,
+                    credentials: "include"
+                })
+
+                const data = await response.json()
+
+                if (data.status === "success") {
+                    location.reload()
+                } else {
+                    alert(data.message)
+                }
+
+            })
+
+
+
+        /* DELETE ACCOUNT */
+
+        async function deleteAccount() {
+
+
+            const response = await fetch(`/users/delete`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+
+            const data = await response.json()
+
+            if (data.status === "success") {
+                window.location.href = "/"
+            } else {
+                alert(data.message)
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
