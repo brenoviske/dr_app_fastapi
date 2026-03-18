@@ -1,6 +1,5 @@
 from fastapi import FastAPI , Request , Depends
 from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
 from users.model import User
 from database.connection import get_db , Base , engine
 from patients.model import Patient
@@ -13,6 +12,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
+load_dotenv()
+
 # This finds the directory where main.py lives (src/)
 # .parent.parent moves up to the root (dr_fast_api/)
 
@@ -23,14 +24,13 @@ current_file = Path(__file__).resolve()
 project_root = current_file.parent.parent
 
 # 3. Construct the absolute path to the static folder
-static_dir = project_root / "frontend" / "static"
+static_dir = project_root / "frontend" / "static" / "assets"
 
 # 4. Mount the directory
-load_dotenv() # Loading all the environment variables right here
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-templates = Jinja2Templates(directory="./frontend/templates")
+templates = Jinja2Templates(directory=str(project_root / "frontend" / "templates"))
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 app.include_router(user_router, prefix="/users", tags=["users"])
