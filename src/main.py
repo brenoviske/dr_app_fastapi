@@ -15,9 +15,17 @@ from fastapi.staticfiles import StaticFiles
 
 # This finds the directory where main.py lives (src/)
 # .parent.parent moves up to the root (dr_fast_api/)
-base_path = Path(__file__).resolve().parent.parent
-static_dir = base_path / "frontend" / "static"
 
+# 1. Get the directory where main.py is located (e.g., /app/src)
+current_file = Path(__file__).resolve()
+
+# 2. Go up one level to reach the project root (e.g., /app)
+project_root = current_file.parent.parent
+
+# 3. Construct the absolute path to the static folder
+static_dir = project_root / "frontend" / "static"
+
+# 4. Mount the directory
 load_dotenv() # Loading all the environment variables right here
 
 Base.metadata.create_all(bind=engine)
