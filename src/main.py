@@ -9,7 +9,6 @@ import uvicorn
 from users.router import router as user_router, get_current_user
 from patients.router import router as patient_router
 from dotenv import load_dotenv
-from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
 load_dotenv()
@@ -17,21 +16,13 @@ load_dotenv()
 # This finds the directory where main.py lives (src/)
 # .parent.parent moves up to the root (dr_fast_api/)
 
-# 1. Get the directory where main.py is located (e.g., /app/src)
-current_file = Path(__file__).resolve()
-
-# 2. Go up one level to reach the project root (e.g., /app)
-project_root = current_file.parent.parent
-
 # 3. Construct the absolute path to the static folder
-static_dir = project_root / "frontend" / "static" / "assets"
 
-# 4. Mount the directory
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-templates = Jinja2Templates(directory=str(project_root / "frontend" / "templates"))
-app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+templates = Jinja2Templates(directory='./frontend/templates')
+app.mount("/static", StaticFiles(directory='./frontend/static'), name="static")
 
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(patient_router, prefix="/patients", tags=["patients"])

@@ -41,7 +41,9 @@ class Patient(Base):
             'cpf' : self.cpf,
             'phone' : self.phone,
             'amount': self.amount,
-            'status' : self.status,
+            'status':self.status,
+            'appointment' : self.appointment,
+            'modality' : self.modality,
             'note' : self.note,
 
         }
