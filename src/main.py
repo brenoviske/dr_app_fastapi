@@ -1,13 +1,13 @@
 from fastapi import FastAPI , Request , Depends
 from fastapi.templating import Jinja2Templates
-from users.model import User
-from database.connection import get_db , Base , engine
-from patients.model import Patient
+from src.users.model import User
+from src.database.connection import get_db , Base , engine
+from src.patients.model import Patient
 from sqlalchemy.orm import Session
 from sqlalchemy import func , case
 import uvicorn
-from users.router import router as user_router, get_current_user
-from patients.router import router as patient_router
+from src.users.router import router as user_router, get_current_user
+from src.patients.router import router as patient_router
 from dotenv import load_dotenv
 from fastapi.staticfiles import StaticFiles
 
@@ -21,8 +21,8 @@ load_dotenv()
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-templates = Jinja2Templates(directory='frontend/templates')
-app.mount("/static", StaticFiles(directory='frontend/static'), name="static")
+templates = Jinja2Templates(directory='src/frontend/templates')
+app.mount("/static", StaticFiles(directory='src/frontend/static'), name="static")
 
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(patient_router, prefix="/patients", tags=["patients"])

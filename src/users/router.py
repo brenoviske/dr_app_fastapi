@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Form, Response, HTTPException, Request
-from users.model import User
-from users.controller import UserController
-from database.connection import get_db
+from src.users.model import User
+from src.users.controller import UserController
+from src.database.connection import get_db
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 import bcrypt

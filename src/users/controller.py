@@ -1,5 +1,5 @@
-from users.repo import UserRepo
-from users.model import User
+from src.users.repo import UserRepo
+from src.users.model import User
 from sqlalchemy.orm import Session
 
 

@@ -1,4 +1,4 @@
-from patients.model import Patient
+from src.patients.model import Patient
 from sqlalchemy.orm import Session
 
 

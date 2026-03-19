@@ -1,5 +1,5 @@
-from patients.model import Patient
-from patients.repo import PatientRepo
+from src.patients.model import Patient
+from src.patients.repo import PatientRepo
 from sqlalchemy.orm import Session
 
 class PatientController:

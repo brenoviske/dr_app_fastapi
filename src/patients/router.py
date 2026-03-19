@@ -1,10 +1,10 @@
 from fastapi import APIRouter , Form , Depends  , HTTPException
-from database.connection import get_db
-from patients.model import Patient
-from users.model import User
-from patients.controller import PatientController
+from src.database.connection import get_db
+from src.patients.model import Patient
+from src.users.model import User
+from src.patients.controller import PatientController
 from sqlalchemy.orm import Session
-from users.router import get_current_user
+from src.users.router import get_current_user
 
 router = APIRouter()
 
