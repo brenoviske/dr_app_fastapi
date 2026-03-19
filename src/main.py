@@ -21,8 +21,8 @@ load_dotenv()
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-templates = Jinja2Templates(directory='./frontend/templates')
-app.mount("/static", StaticFiles(directory='./frontend/static'), name="static")
+templates = Jinja2Templates(directory='frontend/templates')
+app.mount("/static", StaticFiles(directory='frontend/static'), name="static")
 
 app.include_router(user_router, prefix="/users", tags=["users"])
 app.include_router(patient_router, prefix="/patients", tags=["patients"])
