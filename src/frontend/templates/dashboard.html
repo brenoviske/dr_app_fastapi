@@ -8,214 +8,125 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-[#eef6ff] to-[#ffffff] relative min-h-screen overflow-x-hidden font-sans text-gray-800">
+<body class="bg-[#f8fafc] min-h-screen font-sans text-slate-900 antialiased">
 
-    <!-- Decorative background blobs behind everything -->
-    <div class="absolute top-[-10%] left-[-10%] w-[30rem] h-[30rem] bg-blue-300 opacity-20 blur-[100px] rounded-full pointer-events-none z-[-1]"></div>
-    <div class="absolute bottom-[-10%] right-[-5%] w-[35rem] h-[35rem] bg-indigo-300 opacity-10 blur-[120px] rounded-full pointer-events-none z-[-1]"></div>
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-[-5%] left-[-5%] w-[30rem] h-[30rem] bg-blue-100/40 blur-[100px] rounded-full"></div>
+    </div>
 
-    <!-- HEADER -->
-    <header class="bg-white shadow flex items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-4">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-3">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center gap-4">
+                <button id="menuButton" class="p-2 hover:bg-slate-100 rounded-lg text-blue-600 transition-colors">
+                    <span class="text-2xl">☰</span>
+                </button>
+                <h1 class="text-lg font-bold tracking-tight text-slate-800">Visão Geral</h1>
+            </div>
 
-            <button id="menuButton" class="text-blue-600 text-2xl">
-                ☰
-            </button>
-
-            <h1 class="text-lg font-semibold">
-                Visão Geral
-            </h1>
-
-        </div>
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></div>
+                    <span class="text-[10px] font-black text-slate-600 uppercase tracking-widest">{{ plan }}</span>
+                </div>
+                <a href="/billing" class="inline-flex items-center px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-gradient-to-r from-emerald-600 to-green-500 rounded-md shadow-sm hover:brightness-110 transition-all active:scale-95">
+                    Atualizar seu plano
+                </a>
+            </div>
+        </nav>
     </header>
 
-    <!-- SIDEBAR -->
-    <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white transform -translate-x-full transition-transform duration-300 backdrop-blur-md z-50">
-
-        <div class="p-6 font-bold text-xl border-b border-blue-400 flex justify-between items-center">
-            <span>DoctorFlow</span>
-            <button id="closeSidebar" class="text-white text-xl">✕</button>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <span class="font-black text-xl text-white">Doctor<span class="text-blue-500">Flow</span></span>
+            <button id="closeSidebar" class="text-slate-500 hover:text-white">✕</button>
         </div>
-
-        <nav class="p-6 space-y-4">
-            <a href="/main" class="block hover:bg-blue-500 p-2 rounded">
-                Pacientes
-            </a>
-            <a href="/profile" class="block hover:bg-blue-500 p-2 rounded">
-                Perfil
-            </a>
+        <nav class="p-4 space-y-1">
+            <a href="/main" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Pacientes</a>
+            <a href="/profile" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Perfil</a>
+            <a href="/finance" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Financeiro</a>
         </nav>
-
-        <div class="absolute bottom-6 left-6">
-            <a href="/" class="text-red-200 hover:text-white">
-                Logout
-            </a>
+        <div class="absolute bottom-8 w-full px-8 text-center">
+            <a href="/" class="text-xs font-bold text-rose-400 hover:text-rose-300 uppercase tracking-widest">Logout</a>
         </div>
-
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="p-8 relative z-10 max-w-7xl mx-auto">
+    <main class="p-6 lg:p-10 relative z-10 max-w-7xl mx-auto">
 
-        <!-- Dashboard Header -->
-        <div class="mb-10 animate-[slideIn_0.5s_ease-out]">
-            <h2 class="text-3xl font-bold text-gray-800 tracking-tight">Dashboard de Desempenho</h2>
-            <p class="text-gray-500 mt-2 text-lg">Visão geral e métricas importantes da clínica.</p>
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">Dashboard de Desempenho</h2>
+            <p class="text-slate-500 font-medium">Análise em tempo real da sua clínica.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-            <!-- CARD: TOTAL PATIENTS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="md:col-span-2 bg-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
+                <div class="relative z-10">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-2">Total de Receitas</h3>
+                    <p class="text-5xl font-black tracking-tighter">R$ {{ total_amount }}</p>
+                    <div class="mt-6 flex gap-4 text-sm font-medium">
+                        <span class="text-emerald-400">↑ Max: R$ {{ max_revenue }}</span>
+                        <span class="text-slate-400">|</span>
+                        <span class="text-rose-400">↓ Min: R$ {{ min_revenue }}</span>
+                    </div>
                 </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Pacientes</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ number_patients }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: TOTAL REVENUES -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center text-green-600 group-hover:scale-110 group-hover:bg-green-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total de Receitas</h3>
-                    <p class="mt-1 text-2xl font-extrabold text-gray-800">R$ {{ total_amount }}</p>
+                <div class="absolute right-[-20px] top-[-20px] opacity-10 group-hover:scale-110 transition-transform duration-700">
+                    <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
 
-            <!-- CARD: MAX REVENUE -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:bg-indigo-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col justify-center">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Total Pacientes</h3>
+                <p class="text-6xl font-black text-slate-900 tracking-tighter">{{ number_patients }}</p>
+                <p class="text-slate-400 text-sm mt-2 font-medium">Média: R$ {{ mean_revenue }} / pac.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-black text-emerald-600 uppercase mb-1">Confirmados</p>
+                <p class="text-2xl font-black text-slate-800">{{ confirmed_patients }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-black text-amber-600 uppercase mb-1">Pendentes</p>
+                <p class="text-2xl font-black text-slate-800">{{ pending_patients }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-black text-rose-600 uppercase mb-1">Cancelados</p>
+                <p class="text-2xl font-black text-slate-800">{{ cancelled_patients }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-black text-blue-600 uppercase mb-1">Cirurgias</p>
+                <p class="text-2xl font-black text-slate-800">{{ surgeries_count }}</p>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <p class="text-[10px] font-black text-fuchsia-600 uppercase mb-1">Consultas</p>
+                <p class="text-2xl font-black text-slate-800">{{ consults_count }}</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Maior Idade</span>
+                    <span class="text-lg font-bold text-slate-800 truncate max-w-[180px]" title="{{ oldest_patient.name }}">{{ oldest_patient.name }}</span>
                 </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Receita Máxima</h3>
-                    <p class="mt-1 text-2xl font-extrabold text-gray-800">R$ {{ max_revenue }}</p>
-                </div>
+                <div class="text-3xl font-black text-slate-300">{{ oldest_patient.age }}<span class="text-xs">anos</span></div>
             </div>
 
-            <!-- CARD: MIN REVENUE -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-rose-50 flex items-center justify-center text-rose-600 group-hover:scale-110 group-hover:bg-rose-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
+            <div class="bg-white/60 backdrop-blur-sm p-6 rounded-3xl border border-slate-200 flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Menor Idade</span>
+                    <span class="text-lg font-bold text-slate-800 truncate max-w-[180px]" title="{{ youngest_patient.name }}">{{ youngest_patient.name }}</span>
                 </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Receita Mínima</h3>
-                    <p class="mt-1 text-2xl font-extrabold text-gray-800">R$ {{ min_revenue }}</p>
-                </div>
+                <div class="text-3xl font-black text-slate-300">{{ youngest_patient.age }}<span class="text-xs">anos</span></div>
             </div>
-
-            <!-- CARD: MEAN REVENUE -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 group-hover:scale-110 group-hover:bg-teal-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Receita Média</h3>
-                    <p class="mt-1 text-2xl font-extrabold text-gray-800">R$ {{ mean_revenue }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: CONFIRMED PATIENTS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 group-hover:scale-110 group-hover:bg-emerald-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Confirmados</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ confirmed_patients }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: PENDING PATIENTS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 group-hover:scale-110 group-hover:bg-amber-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Pendentes</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ pending_patients }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: CANCELLED PATIENTS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:scale-110 group-hover:bg-red-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Cancelados</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ cancelled_patients }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: TOTAL CIRURGIAS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-cyan-50 flex items-center justify-center text-cyan-600 group-hover:scale-110 group-hover:bg-cyan-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Cirurgias</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ surgeries_count }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: TOTAL CONSULTAS -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-fuchsia-50 flex items-center justify-center text-fuchsia-600 group-hover:scale-110 group-hover:bg-fuchsia-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                </div>
-                <div class="ml-5">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Consultas</h3>
-                    <p class="mt-1 text-3xl font-extrabold text-gray-800">{{ consults_count }}</p>
-                </div>
-            </div>
-
-            <!-- CARD: OLDEST PATIENT -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-purple-50 flex items-center justify-center text-purple-600 group-hover:scale-110 group-hover:bg-purple-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                </div>
-                <div class="ml-5 min-w-0 flex-1">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Maior Idade</h3>
-                    <p class="mt-1 text-xl font-extrabold text-gray-800 truncate" title="{{ oldest_patient.name }}">{{ oldest_patient.name }}</p>
-                    <p class="text-sm text-gray-500 font-medium">{{ oldest_patient.age }} anos</p>
-                </div>
-            </div>
-
-            <!-- CARD: YOUNGEST PATIENT -->
-            <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-white/60 p-6 flex items-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                <div class="w-14 h-14 rounded-full bg-pink-50 flex items-center justify-center text-pink-600 group-hover:scale-110 group-hover:bg-pink-100 transition-all duration-300 flex-shrink-0">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                </div>
-                <div class="ml-5 min-w-0 flex-1">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Menor Idade</h3>
-                    <p class="mt-1 text-xl font-extrabold text-gray-800 truncate" title="{{ youngest_patient.name }}">{{ youngest_patient.name }}</p>
-                    <p class="text-sm text-gray-500 font-medium">{{ youngest_patient.age }} anos</p>
-                </div>
-            </div>
-
         </div>
 
     </main>
 
-<script>
-    const sidebar = document.getElementById("sidebar")
-    const menuButton = document.getElementById("menuButton")
-    const closeSidebar = document.getElementById("closeSidebar")
-
-    menuButton.onclick = () => {
-        sidebar.classList.remove("-translate-x-full")
-    }
-
-    closeSidebar.onclick = () => {
-        sidebar.classList.add("-translate-x-full")
-    }
-</script>
-
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('menuButton').onclick = () => sidebar.classList.remove('-translate-x-full');
+        document.getElementById('closeSidebar').onclick = () => sidebar.classList.add('-translate-x-full');
+    </script>
 </body>
 </html>

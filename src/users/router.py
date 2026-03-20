@@ -24,6 +24,47 @@ SMTP_PORT = 587
 EMAIL_ADDRESS = email_address
 EMAIL_PASSWORD = email_password
 
+def greetings_email(user_email:str , username:str):
+
+    try:
+
+        message = EmailMessage()
+
+        message['Subject'] = 'Boas Vindas ao DoctorFLow!'
+        message['From'] = EMAIL_ADDRESS
+        message['To'] = user_email
+
+        message.set_content(f"""
+    
+    Olá caro usuário {username}.
+    Ficamos honrados em saber de que você agora faz parte do time DoctorFlow.
+    
+    Gerencie , adicione e edite seus pacientes , tendo acesso a visões gerais e financeiras , 
+    acompanhadas de dashboards interativos para sua própria experiência.
+    
+    Sua versão grátis se inicia agora e termina após um período de 7 dias.
+    Aproveite para olhar nosso planos e continuar a usar todos os recursos.
+    
+    Agredecemos mais uma vez por se juntar ao time DoctorFlow.
+    
+    
+    """)
+
+        with smtplib.SMTP(SMTP_SERVER,SMTP_PORT) as smtp:
+
+            smtp.starttls()
+
+            smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
+
+            smtp.send_message(message)
+
+            print('Email successfully sent')
+
+    except Exception as e:
+
+        print('Error:',e)
+
+
 def send_reset_email(user_email: str, reset_link: str):
 
     try:
@@ -80,6 +121,43 @@ def check_password(plain: str, hashed: str):
 
 # ---------- AUTH ---------- #
 
+def trial_expired(
+        user:User,
+        db:Session = Depends(get_db)
+):
+
+    if user.subscription_status == "active":
+        return False
+
+    if user.subscription_status == 'expired':
+
+        return True
+
+    if datetime.utcnow() > user.trial_end:
+        user.subscription_status = 'expired'
+        db.commit() # Commiting subscription status to the database
+        return True
+
+    return False
+
+def redirect_if_authenticated(request:Request, db:Session = Depends(get_db)):
+
+    user_id = request.cookies.get('user_id')
+
+    if user_id:
+
+        user = db.query(User).filter_by(
+            id = int(user_id)
+        ).first()
+
+        if user:
+
+            if not trial_expired(user,db):
+                return True
+
+    return False
+
+
 def get_current_user(
         request: Request,
         db: Session = Depends(get_db)
@@ -91,7 +169,7 @@ def get_current_user(
 
         raise HTTPException(
             status_code=401,
-            detail="Not authenticated"
+            detail="Não autenticado"
         )
 
     user = db.query(User).filter(
@@ -102,7 +180,13 @@ def get_current_user(
 
         raise HTTPException(
             status_code=404,
-            detail="User not found"
+            detail="Usuário não encontrado"
+        )
+
+    if trial_expired(user,db):
+        raise HTTPException(
+            status_code=403,
+            detail='Plano gratuito expirado'
         )
 
     return user
@@ -120,12 +204,17 @@ async def add(
         password: str = Form(...),
         db: Session = Depends(get_db)
 ):
-
+    trial_end = datetime.utcnow() + timedelta(days=7)
+  # Initiating trial end timer to affect or restrict the users behavior if they are not paying it
     new_user = User(
         email=email,
         username=username,
         password_hash=hash_password(password),
+        trial_end = trial_end
     )
+
+
+    greetings_email(email,username) # Sending here then the welcome message for the user after registering
 
     return UserController.add(new_user, db)
 
@@ -141,6 +230,16 @@ async def login(
 ):
 
     user = db.query(User).filter_by(email=email).first()
+
+    if user.subscription_status == 'expired':
+
+        # While trying to do a login this must redirect it to the page of billing prices
+
+        return {
+            'status':'expired',
+            'redirect':'/billing'
+        }
+
 
     if not user:
 
@@ -228,9 +327,7 @@ async def forgot_password(
 
     reset_link = f"http://localhost:8000/reset-password?token={token}"
 
-    print("Sending email to:", user.email)
     send_reset_email(user.email, reset_link)
-    print("Email sent function executed")
 
     return {
         "status": "success",
@@ -287,3 +384,4 @@ def redefine_password(
     return {
         "status": "success"
     }
+

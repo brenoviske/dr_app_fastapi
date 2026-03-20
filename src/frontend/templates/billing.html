@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<title>DoctorFlow | Planos</title>
+<link rel="icon" type="image/png" href="/static/assets/DoctorFlow.png">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body {
+    background: linear-gradient(135deg, #eef6ff, #ffffff);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes slideIn {
+    0% {
+        opacity:0;
+        transform:translateY(-15px);
+    }
+    100% {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card-animation {
+    animation: float 6s ease-in-out infinite;
+}
+
+.notification {
+    animation: slideIn 0.35s ease;
+}
+</style>
+
+</head>
+
+<body class="flex items-center justify-center min-h-screen relative">
+
+<!-- Decorative background -->
+
+<div class="absolute w-96 h-96 bg-blue-200 opacity-30 blur-3xl rounded-full top-10 left-10"></div>
+<div class="absolute w-96 h-96 bg-blue-300 opacity-20 blur-3xl rounded-full bottom-10 right-10"></div>
+
+
+<!-- Billing Card -->
+
+<div class="card-animation bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl w-[450px] p-10 border border-blue-100">
+
+    <!-- Title -->
+
+    <div class="text-center mb-8">
+
+        <h1 class="text-4xl font-bold text-blue-600">
+            DoctorFlow
+        </h1>
+
+        <p class="text-gray-500 mt-2 text-lg">
+            Confira nossos planos
+        </p>
+
+    </div>
+
+
+    <!-- Plan Card -->
+
+    <div class="border border-blue-200 rounded-xl p-6 bg-white shadow-md">
+
+        <div class="text-center">
+
+            <h2 class="text-2xl font-bold text-blue-600">
+                Plano Pro
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+                Ideal para clínicas que precisam de controle completo.
+            </p>
+
+        </div>
+
+
+        <!-- Price -->
+
+        <div class="text-center mt-6">
+
+            <span class="text-4xl font-bold text-gray-800">
+                R$140
+            </span>
+
+            <span class="text-gray-500">
+                / mês
+            </span>
+
+        </div>
+
+
+        <!-- Benefits -->
+
+        <ul class="mt-6 space-y-3 text-gray-700">
+
+            <li class="flex items-center gap-2">
+                <span class="text-green-500 font-bold">✓</span>
+                Acesso ilimitado aos recursos
+            </li>
+
+            <li class="flex items-center gap-2">
+                <span class="text-green-500 font-bold">✓</span>
+                Gestão completa de pacientes
+            </li>
+
+            <li class="flex items-center gap-2">
+                <span class="text-green-500 font-bold">✓</span>
+                Dashboard com métricas da clínica
+            </li>
+
+            <li class="flex items-center gap-2">
+                <span class="text-green-500 font-bold">✓</span>
+                Segurança e armazenamento de dados
+            </li>
+
+        </ul>
+
+
+        <!-- Upgrade Button -->
+
+        <button
+            id="upgradeButton"
+            class="w-full mt-8 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+            Assinar Plano Pro
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const button = document.getElementById("upgradeButton")
+
+button.addEventListener("click", async function(){
+
+    button.innerText = "Redirecionando..."
+    button.disabled = true
+
+    const response = await fetch("/create-checkout-session", {
+        method: "POST",
+        credentials: "include"
+    })
+
+    const data = await response.json()
+
+    window.location.href = data.checkout_url
+
+})
+
+</script>
+
+</body>
+</html>

@@ -40,45 +40,20 @@
 
 
     <!-- SIDEBAR -->
-    <aside id="sidebar"
-        class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white transform -translate-x-full transition-transform duration-300 z-50 backdrop-blur-md shadow-2xl">
-
-        <!-- HEADER -->
-        <div class="flex items-center justify-between p-6 border-b border-blue-400">
-
-            <span class="font-bold text-xl">
-                DoctorFlow
-            </span>
-
-            <button id="closeSidebar" class="text-xl">
-                ✕
-            </button>
-
+      <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <span class="font-black text-xl text-white">Doctor<span class="text-blue-500">Flow</span></span>
+            <button id="closeSidebar" class="text-slate-500 hover:text-white">✕</button>
         </div>
-
-        <!-- NAV -->
-        <nav class="p-6 space-y-4">
-
-            <a href="/main" class="block hover:bg-blue-500 p-2 rounded">
-                Pacientes
-            </a>
-            <a href="/dashboard" class="block hover:bg-blue-500 p-2 rounded">
-                DashBoard
-            </a>
-
-
+        <nav class="p-4 space-y-1">
+            <a href="/profile" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Perfil</a>
+            <a href="/dashboard" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Dashboard</a>
+            <a href="/finance" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Financeiro</a>
         </nav>
-
-        <!-- LOGOUT -->
-        <div class="absolute bottom-6 left-6">
-            <a href="/" class="text-red-200 hover:text-white">
-                Logout
-            </a>
+        <div class="absolute bottom-8 w-full px-8 text-center">
+            <a href="/" class="text-xs font-bold text-rose-400 hover:text-rose-300 uppercase tracking-widest">Logout</a>
         </div>
-
     </aside>
-
-
 
     <!-- MAIN CONTENT -->
     <main class="p-8 flex justify-center mt-10 relative z-10 animate-[slideIn_0.5s_ease-out]">

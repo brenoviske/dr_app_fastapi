@@ -12,6 +12,20 @@ class User(Base):
     username =  Column(String(200), nullable = False , unique=True)
     password_hash = Column(String(512), nullable=False)
     reset_token = Column(String(200), nullable = True , index=True)
+    # ---- Subscription fields ----
+
+    subscription_status = Column(
+        Enum("trial", "active", "expired", name="subscription_status"),
+        default="trial",
+        nullable=False
+    )
+
+    trial_end = Column(DateTime, nullable=True)
+
+    stripe_customer_id = Column(String(255), nullable=True)
+
+    stripe_subscription_id = Column(String(255), nullable=True)
+
     reset_token_expire = Column(DateTime,nullable = True)
     created_at = Column(DateTime,nullable=False,default=datetime.utcnow)
 

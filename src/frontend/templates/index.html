@@ -56,104 +56,103 @@
 
     <!-- Login Card -->
 
-    <div class="card-animation bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl w-[420px] p-10 border border-blue-100">
+        <div class="card-animation bg-white/90 backdrop-blur-xl shadow-2xl rounded-2xl w-[420px] p-10 border border-blue-100">
 
-        <!-- Logo / Title -->
+            <!-- Logo / Title -->
 
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-blue-600">
-                DoctorFlow
-            </h1>
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-blue-600">
+                    DoctorFlow
+                </h1>
 
-            <p class="text-gray-500 mt-1">
-                Sistema de Gestão para Clínicas
-            </p>
-        </div>
-
-
-        <!-- Login Form -->
-
-        <form
-            id="loginForm"
-            class="space-y-5"
-        >
-
-            <!-- Email -->
-
-            <div>
-                <label class="text-sm text-gray-600">
-                    Email
-                </label>
-
-                <input
-                    type="email"
-                    name="email"
-                    required
-                    placeholder="Digite seu email"
-                    class="w-full mt-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                >
+                <p class="text-gray-500 mt-1">
+                    Sistema de Gestão para Clínicas
+                </p>
             </div>
 
 
-            <!-- Password -->
+            <!-- Login Form -->
 
-            <div>
-                <label class="text-sm text-gray-600">
-                    Senha
-                </label>
+            <form
+                id="loginForm"
+                class="space-y-5"
+            >
 
-                <input
-                    type="password"
-                    name="password"
-                    required
-                    placeholder="Digite sua senha"
-                    class="w-full mt-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                <!-- Email -->
+
+                <div>
+                    <label class="text-sm text-gray-600">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="Digite seu email"
+                        class="w-full mt-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    >
+                </div>
+
+
+                <!-- Password -->
+
+                <div>
+                    <label class="text-sm text-gray-600">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        name="password"
+                        required
+                        placeholder="Digite sua senha"
+                        class="w-full mt-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                    >
+                </div>
+
+
+                <!-- Login Button -->
+
+                <button
+                    id="loginButton"
+                    type="submit"
+                    class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
                 >
+                    Entrar
+                </button>
+            </form>
+
+
+            <!-- Links -->
+
+            <div class="flex justify-between text-sm mt-6">
+
+                <a
+                    href="/signup"
+                    class="text-blue-600 hover:underline"
+                >
+                    Criar conta
+                </a>
+
+                <a
+                    href="/recover"
+                    class="text-blue-600 hover:underline"
+                >
+                    Esqueci minha senha
+                </a>
+
             </div>
 
 
-            <!-- Login Button -->
+            <!-- Notification -->
 
-            <button
-                id="loginButton"
-                type="submit"
-                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-            >
-                Entrar
-            </button>
-
-        </form>
-
-
-        <!-- Links -->
-
-        <div class="flex justify-between text-sm mt-6">
-
-            <a
-                href="/signup"
-                class="text-blue-600 hover:underline"
-            >
-                Criar conta
-            </a>
-
-            <a
-                href="/recover"
-                class="text-blue-600 hover:underline"
-            >
-                Esqueci minha senha
-            </a>
+            <div
+                id="notification"
+                class="hidden notification mt-6 text-center text-sm font-semibold p-3 rounded-lg"
+            ></div>
 
         </div>
-
-
-        <!-- Notification -->
-
-        <div
-            id="notification"
-            class="hidden notification mt-6 text-center text-sm font-semibold p-3 rounded-lg"
-        ></div>
-
-    </div>
 
 
 
@@ -192,7 +191,17 @@
                 window.location.href = "/main"
             }, 500)
 
-        } else {
+        }
+        else if (data.status === 'expired'){
+
+            // Redirecting to the billing page right here
+
+            setTimeout(function() {
+                window.location.href = '/billing'
+            }, 500)
+        }
+
+        else {
 
             notification.className =
                 "notification mt-6 text-center text-sm font-semibold p-3 rounded-lg bg-red-100 text-red-700"

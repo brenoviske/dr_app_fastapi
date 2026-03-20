@@ -15,58 +15,56 @@
     <div class="absolute bottom-[-10%] right-[-5%] w-[35rem] h-[35rem] bg-indigo-300 opacity-10 blur-[120px] rounded-full pointer-events-none z-[-1]"></div>
 
     <!-- HEADER -->
-    <header class="bg-white shadow flex items-center justify-between px-6 py-4">
-        <div class="flex items-center gap-4">
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-2.5">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
 
-            <button id="menuButton" class="text-blue-600 text-2xl">
-                ☰
-            </button>
+            <div class="flex items-center gap-6">
+                <button id="menuButton" class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-600">
+                    <span class="text-xl">☰</span>
+                </button>
 
-            <h1 class="text-lg font-semibold">
-                Bem-vindo — {{ user.username }}
-            </h1>
-
+            <div class="flex flex-col">
+                <h1 class="text-sm font-medium text-slate-500 uppercase tracking-tight">Painel de Controle</h1>
+                <p class="text-base font-bold text-slate-900 leading-tight">
+                    Olá, {{ user.username }}
+                </p>
+            </div>
         </div>
+
+        <div class="flex items-center gap-3">
+
+            <div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></div>
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    {{ plan }}
+                </span>
+            </div>
+
+            <a href="/billing" class="inline-flex items-center justify-center px-4 py-2 text-[10px] font-black uppercase tracking-[0.15em] text-white bg-gradient-to-r from-emerald-600 to-green-500 hover:from-emerald-500 hover:to-green-400 transition-all duration-300 rounded-md shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0">
+                Upgrade
+            </a>
+
+            </div>
+        </nav>
     </header>
 
 
-
     <!-- SIDEBAR -->
-    <aside
-        id="sidebar"
-        class="fixed top-0 left-0 w-64 h-full bg-blue-600 text-white transform -translate-x-full transition-transform duration-300 z-50 backdrop-blur-md shadow-2xl"
-    >
-
-         <div class="flex items-center justify-between p-6 border-b border-blue-400">
-
-            <span class="font-bold text-xl">
-                DoctorFlow
-            </span>
-
-            <button id="closeSidebar" class="text-xl">
-                ✕
-            </button>
-
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 transform -translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <span class="font-black text-xl text-white">Doctor<span class="text-blue-500">Flow</span></span>
+            <button id="closeSidebar" class="text-slate-500 hover:text-white">✕</button>
         </div>
+        <nav class="p-4 space-y-1">
+            <a href="/profile" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Perfil</a>
+            <a href="/dashboard" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Dashboard</a>
+            <a href="/finance" class="block px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Financeiro</a>
 
-        <nav class="p-6 space-y-4">
-            <a href="/profile" class="block hover:bg-blue-500 p-2 rounded">
-                Perfil
-            </a>
-
-             <a href="/dashboard" class="block hover:bg-blue-500 p-2 rounded">
-                DashBoard
-            </a>
         </nav>
-
-        <div class="absolute bottom-6 left-6">
-            <a href="/" class="text-red-200 hover:text-white">
-                Logout
-            </a>
+        <div class="absolute bottom-8 w-full px-8 text-center">
+            <a href="/" class="text-xs font-bold text-rose-400 hover:text-rose-300 uppercase tracking-widest">Logout</a>
         </div>
-
     </aside>
-
 
 
     <!-- MAIN CONTENT -->
@@ -382,10 +380,7 @@
 
                 ${patient.note ? `
                 <div class="mt-4 p-4 bg-amber-50/40 border border-amber-200/60 rounded-xl text-sm text-gray-700 h-28 overflow-y-auto custom-scrollbar shadow-inner relative">
-                    <div class="sticky top-0 bg-amber-50/90 backdrop-blur-sm -mt-4 pb-2 pt-4 flex items-center gap-1.5 border-b border-amber-100/50 mb-2">
-                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        <span class="font-bold text-amber-800 uppercase tracking-widest text-[10px]">Observações</span>
-                    </div>
+
                     <p class="leading-relaxed whitespace-pre-wrap">${patient.note}</p>
                 </div>` : ""}
             </div>

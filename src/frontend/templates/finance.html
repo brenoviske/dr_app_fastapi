@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoctorFlow | Financeiro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-[#f8fafc] min-h-screen font-sans text-slate-900 antialiased overflow-x-hidden">
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-900 text-slate-300 transform -translate-x-full transition-transform duration-300 ease-in-out z-50 shadow-2xl">
+        <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+            <span class="font-black text-xl text-white tracking-tighter">Doctor<span class="text-blue-500">Flow</span></span>
+            <button id="closeSidebar" class="p-1 hover:bg-slate-800 rounded text-slate-500 transition-colors">✕</button>
+        </div>
+        <nav class="p-4 space-y-1">
+            <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Dashboard</a>
+            <a href="/main" class="flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Pacientes</a>
+            <a href="/profile" class="flex items-center gap-3 px-4 py-3 text-sm font-bold hover:bg-blue-600 hover:text-white rounded-xl transition-all">Perfil</a>
+        </nav>
+        <div class="absolute bottom-8 w-full px-8">
+            <a href="/logout" class="text-xs font-bold text-rose-400 hover:text-rose-300 transition-colors uppercase tracking-widest flex items-center gap-2">
+                <span>↪</span> Sair da Conta
+            </a>
+        </div>
+    </aside>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 hidden z-40 backdrop-blur-sm transition-opacity"></div>
+
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-3">
+        <nav class="flex items-center justify-between max-w-7xl mx-auto">
+            <div class="flex items-center gap-4">
+                <button id="menuButton" class="p-2 hover:bg-slate-100 rounded-lg text-blue-600 transition-colors focus:outline-none">
+                    <span class="text-2xl leading-none">☰</span>
+                </button>
+                <div class="flex flex-col">
+                    <h1 class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 leading-none mb-1">Finanças</h1>
+                    <p class="text-sm font-bold text-slate-800">Análise de Receita</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2 animate-pulse"></div>
+                    <span class="text-[10px] font-black text-blue-700 uppercase tracking-widest">{{ plan }}</span>
+                </div>
+                <a href="/billing" class="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white bg-gradient-to-r from-emerald-600 to-green-500 rounded-md shadow-sm hover:brightness-110 transition-all active:scale-95">
+                    Upgrade
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="p-6 lg:p-10 max-w-7xl mx-auto relative z-10">
+
+        <div class="mb-10">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Performance Financeira</h2>
+            <p class="text-slate-500 font-medium text-lg mt-1">Dados reais e projeções por IA.</p>
+            <p class="text-slate-500 font-medium text-lg mt-1">Os dados são projetados em uma análise de período de 11 meses , portanto pode se haver desvios.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Receita (Últimos 11m)</p>
+                <p class="text-4xl font-black text-slate-900 tracking-tighter">R$ {{ stats.total_revenue }}</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Média Mensal Realizada</p>
+                <p class="text-4xl font-black text-slate-900 tracking-tighter">R$ {{ stats.avg_revenue }}</p>
+            </div>
+
+            <div class="bg-slate-900 p-6 rounded-3xl text-white shadow-xl ring-4 ring-blue-500/10 relative overflow-hidden group">
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Projeção Próximo Mês</p>
+                        <span class="text-[9px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full font-bold">Sklearn Engine</span>
+                    </div>
+                    <p class="text-4xl font-black text-white tracking-tighter">R$ {{ stats.prediction }}</p>
+                </div>
+                <div class="absolute right-[-10px] bottom-[-10px] opacity-10 group-hover:scale-110 transition-transform duration-700">
+                    <svg class="w-24 h-24 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-sm font-black text-slate-800 uppercase tracking-wider">Tendência de Faturamento</h3>
+                <div class="flex items-center gap-4 text-[10px] font-bold uppercase">
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Real</div>
+                    <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Projeção</div>
+                </div>
+            </div>
+            <div class="h-[400px]">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // CONTROLE DO SIDEBAR
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const menuBtn = document.getElementById('menuButton');
+        const closeBtn = document.getElementById('closeSidebar');
+
+        function toggleSidebar(state) {
+            if (state) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        menuBtn.addEventListener('click', () => toggleSidebar(true));
+        closeBtn.addEventListener('click', () => toggleSidebar(false));
+        overlay.addEventListener('click', () => toggleSidebar(false));
+
+        // CONFIGURAÇÃO DO CHART.JS
+        const ctx = document.getElementById('financeChart').getContext('2d');
+
+        // Dados injetados pelo Jinja2 (Note o uso de revenue_list para evitar erro de sistema)
+        const labels = {{ stats.labels | tojson }};
+        const dataValues = {{ stats.revenue_list | tojson }};
+        const prediction = {{ stats.prediction }};
+
+        // Preparamos os dados estendidos para incluir o ponto futuro
+        const extendedLabels = [...labels, "Próximo (AI)"];
+        const extendedValues = [...dataValues, prediction];
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: extendedLabels,
+                datasets: [{
+                    label: 'Faturamento',
+                    data: extendedValues,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#2563eb',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    tension: 0.4,
+                    fill: true,
+                    // Segmento tracejado para a predição
+                    segment: {
+                        borderDash: ctx => ctx.p1DataIndex === extendedValues.length - 1 ? [6, 6] : undefined,
+                        borderColor: ctx => ctx.p1DataIndex === extendedValues.length - 1 ? '#10b981' : undefined,
+                    }
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0f172a',
+                        padding: 12,
+                        titleFont: { size: 10, weight: 'bold' },
+                        bodyFont: { size: 14, weight: '900' },
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return ' R$ ' + context.parsed.y.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: {
+                            callback: value => 'R$ ' + value.toLocaleString('pt-BR'),
+                            font: { size: 10, weight: 'bold' }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 10, weight: 'bold' } }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
