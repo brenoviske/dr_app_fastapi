@@ -1,5 +1,7 @@
 from src.users.model import User
 from sqlalchemy.orm import Session
+import stripe
+
 
 class UserRepo:
 
@@ -38,26 +40,35 @@ class UserRepo:
             return {'status':'error','message':e}
 
     @staticmethod
-    def remove_user(id:int, db:Session):
-
-        existing_user = UserRepo.find_by_Id(id,db)
+    def remove_user(id: int, db: Session):
+        existing_user = UserRepo.find_by_Id(id, db)
 
         if not existing_user:
-
-            return {'status':'error','message':'Usuário nao existente'}
+            return {'status': 'error', 'message': 'Usuário não existente'}
 
         try:
+            # 1. STOP THE BLEEDING (Stripe Cancellation)
+            # Check if the user ever started a Stripe journey
+            if existing_user.stripe_customer_id:
+                try:
+                    # This cancels all subscriptions and deletes the customer profile
+                    stripe.Customer.delete(existing_user.stripe_customer_id)
+                except stripe.error.StripeError as e:
+                    # We log this, but we don't necessarily want to block
+                    # the DB deletion if the Stripe account is already gone.
+                    print(f"Stripe cleanup failed: {e}")
 
+            # 2. DATABASE CLEANUP
+            # Your 'cascade=all,delete' on the 'patients' relationship
+            # will automatically handle the patient records.
             db.delete(existing_user)
             db.commit()
 
-            return {'status':'success'}
+            return {'status': 'success'}
 
         except Exception as e:
-
             db.rollback()
-
-            return {'status':'error','message':str(e)}
+            return {'status': 'error', 'message': str(e)}
 
     @staticmethod
     def update_user(id:int , email:str , username:str, db:Session):

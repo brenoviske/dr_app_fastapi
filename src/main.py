@@ -201,5 +201,45 @@ def create_checkout_session(user: User = Depends(get_current_user)):
     return {"checkout_url": session.url}
 
 
+@app.post("/webhook")
+async def stripe_webhook(request: Request, db: Session = Depends(get_db)):
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+    endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+    try:
+        event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
+    except Exception as e:
+        return {"error": str(e)}
+
+    # This is the moment Stripe tells us the Customer ID and Subscription ID
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+
+        # 1. Look up the user using the metadata we sent in create_checkout_session
+        user_id = session.get("metadata", {}).get("user_id")
+
+        if user_id:
+            user = db.query(User).filter(User.id == user_id).first()
+            if user:
+                # 2. SAVE THE IDs! This is what was missing.
+                user.stripe_customer_id = session.get("customer")
+                user.stripe_subscription_id = session.get("subscription")
+                user.subscription_status = "active"
+                db.commit()
+                print(f"User {user.email} updated with Customer ID: {user.stripe_customer_id}")
+
+    # Handle Cancellation (User went to Stripe and cancelled)
+    elif event["type"] == "customer.subscription.deleted":
+        subscription = event["data"]["object"]
+        customer_id = subscription.get("customer")
+        user = db.query(User).filter(User.stripe_customer_id == customer_id).first()
+        if user:
+            user.subscription_status = "expired"
+            db.commit()
+
+    return {"status": "success"}
+
+
 if __name__ == '__main__':
     uvicorn.run(app)
