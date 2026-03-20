@@ -204,8 +204,8 @@ def create_checkout_session(user: User = Depends(get_current_user)):
         payment_method_types=["card"],
         customer_email=user.email,
         line_items=[{"price": os.getenv('price_stripe_id'), "quantity": 1}],
-        success_url="http://localhost:8000/main?payment=success",
-        cancel_url="http://localhost:8000/billing",
+        success_url="https://doctorflow.app.br/main?payment=success",
+        cancel_url="https://doctorflow.app.br/billing",
         metadata={"user_id": user.id}
     )
     return {"checkout_url": session.url}
