@@ -189,6 +189,7 @@ def finance_page(request: Request, user: User = Depends(get_current_user), db: S
     return render("finance.html", request, user=user, stats={
         "labels": labels,
         "revenue_list": values,
+        "mean_revenue": mean(values),
         "prediction": round(prediction, 2),
         "total_revenue": round(sum(values), 2),
         'plan':plan
