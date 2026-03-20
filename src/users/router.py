@@ -24,45 +24,7 @@ SMTP_PORT = 587
 EMAIL_ADDRESS = email_address
 EMAIL_PASSWORD = email_password
 
-def greetings_email(user_email:str , username:str):
 
-    try:
-
-        message = EmailMessage()
-
-        message['Subject'] = 'Boas Vindas ao DoctorFLow!'
-        message['From'] = EMAIL_ADDRESS
-        message['To'] = user_email
-
-        message.set_content(f"""
-    
-    Olá caro usuário {username}.
-    Ficamos honrados em saber de que você agora faz parte do time DoctorFlow.
-    
-    Gerencie , adicione e edite seus pacientes , tendo acesso a visões gerais e financeiras , 
-    acompanhadas de dashboards interativos para sua própria experiência.
-    
-    Sua versão grátis se inicia agora e termina após um período de 7 dias.
-    Aproveite para olhar nosso planos e continuar a usar todos os recursos.
-    
-    Agredecemos mais uma vez por se juntar ao time DoctorFlow.
-    
-    
-    """)
-
-        with smtplib.SMTP(SMTP_SERVER,SMTP_PORT) as smtp:
-
-            smtp.starttls()
-
-            smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
-
-            smtp.send_message(message)
-
-            print('Email successfully sent')
-
-    except Exception as e:
-
-        print('Error:',e)
 
 
 def send_reset_email(user_email: str, reset_link: str):
@@ -82,7 +44,9 @@ Recebemos uma solicitação para redefinir a senha da sua conta.
 
 Acesse o link abaixo para redefinir sua senha , você será redirecionado ao login caso consiga alterar sua senha:
 
-{reset_link}
+{reset_link} 
+
+Não compartilhe ou divulgue este link com terceiros por medidas de privacidade dos seus dados
 """)
 
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
@@ -163,6 +127,8 @@ def get_current_user(
         db: Session = Depends(get_db)
 ):
 
+    token = request.cookies.get('access_token')
+    print(f"DEBUG: Token recebido no checkout return: {token}")
     user_id = request.cookies.get("user_id")
 
     if not user_id:
@@ -214,8 +180,6 @@ async def add(
     )
 
 
-    greetings_email(email,username) # Sending here then the welcome message for the user after registering
-
     return UserController.add(new_user, db)
 
 
@@ -228,44 +192,34 @@ async def login(
         password: str = Form(...),
         db: Session = Depends(get_db)
 ):
-
+    # 1. Primeiro: O usuário existe?
     user = db.query(User).filter_by(email=email).first()
 
-    if user.subscription_status == 'expired':
-
-        # While trying to do a login this must redirect it to the page of billing prices
-
-        return {
-            'status':'expired',
-            'redirect':'/billing'
-        }
-
-
-    if not user:
-
+    if not user or not check_password(password, user.password_hash):
         return {
             "status": "error",
             "message": "Credenciais inválidas"
         }
 
+    # 2. Segundo: Verificação de assinatura (opcional bloquear aqui ou na /main)
+    if user.subscription_status == 'expired':
+        return {
+            'status': 'expired',
+            'redirect': '/billing'
+        }
 
-    if check_password(password, user.password_hash):
+    # 3. Configuração do Cookie (Ajustada para Localhost e Stripe)
+    response.set_cookie(
+        key="user_id",  # Certifique-se que get_current_user busca por 'user_id'
+        value=str(user.id),
+        httponly=True,
+        # MUITO IMPORTANTE:
+        secure=False,  # Mude para True apenas no Railway (HTTPS)
+        samesite='lax',  # Permite que o cookie volte do Stripe para o seu site
+        path="/"
+    )
 
-        response.set_cookie(
-            key="user_id",
-            value=str(user.id),
-            httponly=True,
-            secure=True,
-            samesite='lax',
-            path="/"
-        )
-
-        return {"status": "success"}
-
-    return {
-        "status": "error",
-        "message": "Credenciais inválidas"
-    }
+    return {"status": "success"}
 
 
 # ---------- DELETE ACCOUNT ---------- #

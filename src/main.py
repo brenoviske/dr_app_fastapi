@@ -3,7 +3,7 @@ import numpy as np
 import os
 from datetime import datetime
 from collections import defaultdict
-from fastapi import FastAPI, Request, Depends, Form, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -26,7 +26,6 @@ stripe_key = os.getenv('stripe_key')
 stripe.api_key = stripe_key
 
 Base.metadata.create_all(bind = engine) # Generating all the tables on the database
-
 app = FastAPI()
 templates = Jinja2Templates(directory='src/frontend/templates')
 app.mount("/static", StaticFiles(directory='src/frontend/static'), name="static")
@@ -99,6 +98,10 @@ def get_patients(current_user:User = Depends(get_current_user), db:Session = Dep
     return [ p.to_json() for p in patients ]
 @app.get('/dashboard')
 def dashboard(request: Request, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+
+    # Fetching here the user to upload the current plan there
+
+    plan = 'Pro' if current_user.subscription_status == 'active' else 'Gratuito'
     patients = db.query(Patient).filter_by(user_id=current_user.id).all()
 
     # Métricas Financeiras
@@ -130,7 +133,9 @@ def dashboard(request: Request, current_user: User = Depends(get_current_user), 
                   surgeries_count=stats.surg,
                   consults_count=stats.cons,
                   oldest_patient=oldest,
-                  youngest_patient=youngest
+                  youngest_patient=youngest,
+                  plan = plan
+
                   )
 
 
@@ -157,6 +162,10 @@ def profile_page(
 
 @app.get('/finance')
 def finance_page(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+
+    # Fetching here again the users plan
+
+    plan = 'Pro' if user.subscription_status == 'active' else 'Gratuito'
     patients = db.query(Patient).filter(Patient.user_id == user.id, Patient.status == 'Confirmado').all()
 
     monthly_totals = defaultdict(float)
@@ -181,7 +190,8 @@ def finance_page(request: Request, user: User = Depends(get_current_user), db: S
         "labels": labels,
         "revenue_list": values,
         "prediction": round(prediction, 2),
-        "total_revenue": round(sum(values), 2)
+        "total_revenue": round(sum(values), 2),
+        'plan':plan
     })
 
 
