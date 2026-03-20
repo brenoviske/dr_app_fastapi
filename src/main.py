@@ -107,6 +107,8 @@ def dashboard(request: Request, current_user: User = Depends(get_current_user), 
     # Métricas Financeiras
     amounts = [p.amount for p in patients if p.amount is not None]
     total_amount = round(sum(amounts), 2) if amounts else 0
+    min_revenue = round(min(amounts),2)
+    max_revenue = round(max(amounts),2)
     mean_rev = round(mean(amounts), 2)
 
     # Contagens via SQL (Garante 0 em vez de None)
@@ -134,7 +136,9 @@ def dashboard(request: Request, current_user: User = Depends(get_current_user), 
                   consults_count=stats.cons,
                   oldest_patient=oldest,
                   youngest_patient=youngest,
-                  plan = plan
+                  plan = plan,
+                  min_revenue = min_revenue,
+                  max_revenue = max_revenue
 
                   )
 
