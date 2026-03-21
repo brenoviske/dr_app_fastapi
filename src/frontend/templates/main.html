@@ -435,19 +435,41 @@
     /* DELETE PATIENT */
 
     async function deletePatient(id) {
+    // 1. Encontrar o elemento no DOM (ex: a linha da tabela)
+    const patientElement = document.getElementById(`patient-${id}`);
 
-    const response = await fetch(`/patients/delete?patient_id=${id}`, {
-        method: "DELETE",
-        credentials : "include"
+    // 2. Esconder ou remover visualmente NA HORA
+    if (patientElement) {
+        patientElement.style.transition = "opacity 0.3s";
+        patientElement.style.opacity = "0";
+        // Opcional: remover após a transição ou apenas dar display: none
+        setTimeout(() => patientElement.style.display = 'none', 300);
+    }
 
-    })
+    try {
+        const response = await fetch(`/patients/delete?patient_id=${id}`, {
+            method: "DELETE",
+            credentials: "include"
+        });
 
-    const data = await response.json()
+        const data = await response.json();
 
-    if (data.status === "success") {
-        location.reload()
-    } else {
-        alert(data.message)
+        if (data.status !== "success") {
+            // Se falhou, desfaz a remoção e avisa o usuário
+            alert("Erro ao excluir: " + data.message);
+            if (patientElement) {
+                patientElement.style.display = '';
+                patientElement.style.opacity = "1";
+            }
+        }
+        // NOTA: Remova o location.reload()!
+        // Se a UI já foi atualizada, não precisa recarregar a página inteira.
+    } catch (error) {
+        console.error("Erro na rede:", error);
+        if (patientElement) {
+            patientElement.style.display = '';
+            patientElement.style.opacity = "1";
+        }
     }
 }
 
