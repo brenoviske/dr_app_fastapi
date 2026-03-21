@@ -279,7 +279,7 @@ async def forgot_password(
 
     db.commit()
 
-    reset_link = f"http://localhost:8000/reset-password?token={token}"
+    reset_link = f"https://drappfastapi-production.up.railway.app/reset-password?token={token}"
 
     send_reset_email(user.email, reset_link)
 

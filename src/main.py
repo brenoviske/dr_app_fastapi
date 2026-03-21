@@ -81,6 +81,10 @@ def pricing_page(request: Request):
     return render('billing.html', request)
 
 
+@app.get('/recover')
+def recover_page(request:Request):
+    return render('forgetpass.html', request)
+
 # ---------- ROTAS PROTEGIDAS ---------- #
 
 @app.get('/main')
