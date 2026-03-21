@@ -63,15 +63,19 @@ async def trial_expired_handler(request: Request, exc: HTTPException):
 # ---------- ROTAS PÚBLICAS ---------- #
 
 @app.get("/")
-def index(request: Request, db: Session = Depends(get_db)):
+def home(request: Request, db: Session = Depends(get_db)):
 
     if redirect_if_authenticated(request,db):
 
         return RedirectResponse(url='/main',status_code=303)
 
 
-    return render('index.html', request)
+    return render('landingpage.html', request)
 
+@app.get('/first-access')
+def index( request:Request):
+
+    return render('index.html', request)
 
 @app.get('/signup')
 def signup(request: Request):
