@@ -52,6 +52,6 @@ The system is designed to be "Environment Aware," pulling sensitive configuratio
 ## 🌐 Deployment
 
 The production environment is currently live at:  
-🔗 [doctorflow.app.br](https://doctorflow.app.br)
+🔗 [doctorflow.app.br](https://https://drappfastapi-production.up.railway.app/)
 
 ---
