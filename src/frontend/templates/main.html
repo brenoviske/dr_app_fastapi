@@ -434,17 +434,15 @@
 
     /* DELETE PATIENT */
 
-    async function deletePatient(id) {
-    // 1. Encontrar o elemento no DOM (ex: a linha da tabela)
+   async function deletePatient(id) {
+    // 1. Tenta esconder o card visualmente na hora (Otimismo)
     const patientElement = document.getElementById(`patient-${id}`);
-
-    // 2. Esconder ou remover visualmente NA HORA
     if (patientElement) {
-        patientElement.style.transition = "opacity 0.3s";
-        patientElement.style.opacity = "0";
-        // Opcional: remover após a transição ou apenas dar display: none
-        setTimeout(() => patientElement.style.display = 'none', 300);
+        patientElement.style.opacity = "0.5";
+        patientElement.style.pointerEvents = "none"; // Impede cliques duplos
     }
+
+    console.log("Deletando paciente e atualizando página...", id);
 
     try {
         const response = await fetch(`/patients/delete?patient_id=${id}`, {
@@ -452,23 +450,26 @@
             credentials: "include"
         });
 
-        const data = await response.json();
-
-        if (data.status !== "success") {
-            // Se falhou, desfaz a remoção e avisa o usuário
-            alert("Erro ao excluir: " + data.message);
+        if (response.ok) {
+            // 2. SUCESSO: Recarrega a página automaticamente para limpar a lista
+            console.log("Sucesso no banco. Recarregando...");
+            window.location.reload();
+        } else {
+            // Se o servidor der erro, avisamos e restauramos o card
+            const errorData = await response.json();
+            alert("Erro ao excluir: " + (errorData.detail || "Erro no servidor"));
             if (patientElement) {
-                patientElement.style.display = '';
                 patientElement.style.opacity = "1";
+                patientElement.style.pointerEvents = "auto";
             }
         }
-        // NOTA: Remova o location.reload()!
-        // Se a UI já foi atualizada, não precisa recarregar a página inteira.
+
     } catch (error) {
-        console.error("Erro na rede:", error);
+        console.error("Erro de conexão:", error);
+        alert("Falha na rede. Verifique sua conexão.");
         if (patientElement) {
-            patientElement.style.display = '';
             patientElement.style.opacity = "1";
+            patientElement.style.pointerEvents = "auto";
         }
     }
 }

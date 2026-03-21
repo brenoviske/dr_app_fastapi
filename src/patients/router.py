@@ -81,14 +81,11 @@ def add(
 
 @router.delete('/delete')
 def delete(
-        patient_id:int,
+        current_patient:Patient = Depends(get_current_patient),
         current_user:User = Depends(get_current_user),
         db:Session = Depends(get_db),
 ):
-
-    patient = get_current_patient(patient_id, db)
-
-    return PatientController.delete(patient.id, current_user.id , db)
+    return PatientController.delete(current_patient.id, current_user.id , db)
 
 
 @router.put('/update')
