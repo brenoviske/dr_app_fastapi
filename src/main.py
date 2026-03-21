@@ -68,6 +68,8 @@ def index(request: Request, db: Session = Depends(get_db)):
     if redirect_if_authenticated(request,db):
 
         return RedirectResponse(url='/main',status_code=303)
+
+
     return render('index.html', request)
 
 
@@ -93,6 +95,12 @@ def main(request: Request, user: User = Depends(get_current_user) , db:Session =
 
     return render('main.html', request, user=user, plan=plan)
 
+@app.get("/logout")
+def logout():
+    response = RedirectResponse(url='/', status_code=303)
+    # Remove o cookie que sua função 'redirect_if_authenticated' verifica
+    response.delete_cookie("session_token")
+    return response
 
 @app.get('/patients/all')
 def get_patients(current_user:User = Depends(get_current_user), db:Session = Depends(get_db)):

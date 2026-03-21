@@ -267,7 +267,7 @@ async def forgot_password(
     if not user:
 
         return {
-            "status": "success",
+            "status": "error",
             "message": "Se o e-mail existir, um link será enviado."
         }
 
