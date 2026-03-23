@@ -14,44 +14,6 @@ EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 
-def greetings_email(user_email: str, username: str):
-    try:
-
-        message = EmailMessage()
-
-        message['Subject'] = 'Boas Vindas ao DoctorFLow!'
-        message['From'] = EMAIL_ADDRESS
-        message['To'] = user_email
-
-        message.set_content(f"""
-
-    Olá caro usuário {username}.
-    Ficamos honrados em saber de que você agora faz parte do time DoctorFlow.
-
-    Gerencie , adicione e edite seus pacientes , tendo acesso a visões gerais e financeiras , 
-    acompanhadas de dashboards interativos para sua própria experiência.
-
-    Sua versão grátis se inicia agora e termina após um período de 7 dias.
-    Aproveite para olhar nosso planos e continuar a usar todos os recursos.
-
-    Agredecemos mais uma vez por se juntar ao time DoctorFlow.
-
-
-    """)
-
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
-
-            smtp.starttls()
-
-            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
-
-            smtp.send_message(message)
-
-            print('Email successfully sent')
-
-    except Exception as e:
-
-        print('Error:', e)
 
 class UserRepo:
 
@@ -83,7 +45,6 @@ class UserRepo:
             db.commit()
             db.refresh(user)
 
-            greetings_email(user.email, user.username)
 
             return {'status':'success'}
 
