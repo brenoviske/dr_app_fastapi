@@ -1,12 +1,41 @@
 from fastapi import APIRouter , Form , Depends  , HTTPException
 from src.database.connection import get_db
 from src.patients.model import Patient
+from pydantic import BaseModel
 from src.users.model import User
 from src.patients.controller import PatientController
 from sqlalchemy.orm import Session
 from src.users.router import get_current_user
 
 router = APIRouter()
+
+# -------- Making the class patient models right here ---
+
+class PatientCreate(BaseModel):
+
+    name:str
+    age:int
+    cpf:str
+    phone:str
+    status:str
+    amount:float
+    appointment:str
+    modality:str
+    note:str
+
+
+class PatientUpdate(BaseModel):
+
+    name:str
+    age:int
+    cpf:str
+    phone:str
+    status:str
+    amount:float
+    appointment:str
+    modality:str
+    note:str
+
 
 
 
@@ -28,29 +57,21 @@ def get_current_patient(
 
 @router.post('/add')
 def add(
-        name:str = Form(...),
-        age:int = Form(...),
-        cpf:str = Form(...),
-        phone:str = Form(...),
-        status:str = Form(None),
-        amount:float  = Form(None),
-        appointment:str = Form(None),
-        modality:str = Form(None),
-        note:str = Form(None),
+        pt_create:PatientCreate,
         user:User = Depends(get_current_user),
         db:Session = Depends(get_db),
 ):
 
-    if modality:
-        modality = modality.lower()
+    if pt_create.modality:
+        pt_create.modality = pt_create.modality.lower()
 
-    if len(cpf) < 11 or len(cpf) > 11:
+    if len(pt_create.cpf) < 11 or len(pt_create.cpf) > 11:
 
         return {'status':'error','message':'CPF neccesita ter 11 digitos'}
 
     # Checking to see if the cpf only contain numbers
 
-    for i in cpf:
+    for i in pt_create.cpf:
         if i.isalpha():
 
             return {'status':'error','message':'CPF não pode incluir letras'}
@@ -64,15 +85,15 @@ def add(
         return {'status':'error','message':'CPF já cadastrado'}
 
     new_patient = Patient(
-        name = name,
-        age = age,
-        cpf = cpf,
-        phone= phone,
-        status = status.lower(),
-        amount = amount,
-        appointment=appointment,
-        modality = modality,
-        note = note,
+        name = pt_create.name,
+        age = pt_create.age,
+        cpf = pt_create.cpf,
+        phone= pt_create.phone,
+        status = pt_create.status.lower(),
+        amount = pt_create.amount,
+        appointment= pt_create.appointment,
+        modality = pt_create.modality,
+        note = pt_create.note,
         user_id= user.id
     )
 
@@ -91,20 +112,13 @@ def delete(
 @router.put('/update')
 def update(
         patient_id:int,
-        name:str = Form(None),
-        age:int = Form(None),
-        cpf: str = Form(None),
-        phone: str = Form(None),
-        status: str = Form(None),
-        amount:float = Form(None),
-        appointment:str = Form(None),
-        modality:str = Form(None),
-        note: str = Form(None),
+        new_update:PatientUpdate,
         user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
 ):
 
     patient = get_current_patient(patient_id, db)
     return PatientController.update(patient.id, user.id,
-                                    name, age, cpf, phone, status,amount,appointment,modality,note,db)
+                                    new_update.name, new_update.age, new_update.cpf, new_update.phone, new_update.status,new_update.amount,new_update.appointment,new_update.modality,
+                                    new_update.note,db)
 

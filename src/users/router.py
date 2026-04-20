@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Form, Response, HTTPException, Request
+from pydantic import BaseModel
 from src.users.model import User
 from src.users.controller import UserController
 from src.database.connection import get_db
@@ -160,22 +161,38 @@ def get_current_user(
 
 router = APIRouter()
 
+# --------- USING PYDANTIC MODELS TO FETCH THE DATA FROM THE FRONTEND
+
+class UserCreate(BaseModel):
+
+    email:str
+    username:str
+    password:str
+
+
+class UserLogin(BaseModel):
+
+    email:str
+    password:str
+
+class UserUpdate(BaseModel):
+
+    email:str
+    username:str
 
 # ---------- REGISTER ---------- #
 
 @router.post("/add")
 async def add(
-        email: str = Form(...),
-        username: str = Form(...),
-        password: str = Form(...),
+        new_user:UserCreate,
         db: Session = Depends(get_db)
 ):
     trial_end = datetime.utcnow() + timedelta(days=7)
   # Initiating trial end timer to affect or restrict the users behavior if they are not paying it
     new_user = User(
-        email=email,
-        username=username,
-        password_hash=hash_password(password),
+        email=new_user.email,
+        username=new_user.username,
+        password_hash=hash_password(new_user.password),
         trial_end = trial_end
     )
 
@@ -188,14 +205,13 @@ async def add(
 @router.post("/login")
 async def login(
         response: Response,
-        email: str = Form(...),
-        password: str = Form(...),
+        new_login:UserLogin,
         db: Session = Depends(get_db)
 ):
     # 1. Primeiro: O usuário existe?
-    user = db.query(User).filter_by(email=email).first()
+    user = db.query(User).filter_by(email = new_login.email).first()
 
-    if not user or not check_password(password, user.password_hash):
+    if not user or not check_password(new_login.password, user.password_hash):
         return {
             "status": "error",
             "message": "Credenciais inválidas"
@@ -237,16 +253,15 @@ async def delete(
 
 @router.put("/update")
 async def update(
-        email: str = Form(None),
-        username: str = Form(None),
+        new_update:UserUpdate,
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db)
 ):
 
     return UserController.update(
         current_user.id,
-        email,
-        username,
+        new_update.email,
+        new_update.username,
         db
     )
 
