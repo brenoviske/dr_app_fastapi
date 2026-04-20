@@ -57,21 +57,29 @@ def get_current_patient(
 
 @router.post('/add')
 def add(
-        pt_create:PatientCreate,
+        name:str = Form(...),
+        age:int = Form(...),
+        cpf:str = Form(...),
+        phone:str = Form(...),
+        status:str = Form(None),
+        amount:float = Form(None),
+        appointment:str = Form(None),
+        modality:str = Form(None),
+        note:str = Form(None),
         user:User = Depends(get_current_user),
         db:Session = Depends(get_db),
 ):
 
-    if pt_create.modality:
-        pt_create.modality = pt_create.modality.lower()
+    if modality:
+        modality = modality.lower()
 
-    if len(pt_create.cpf) < 11 or len(pt_create.cpf) > 11:
+    if len(cpf) < 11 or len(cpf) > 11:
 
         return {'status':'error','message':'CPF neccesita ter 11 digitos'}
 
     # Checking to see if the cpf only contain numbers
 
-    for i in pt_create.cpf:
+    for i in cpf:
         if i.isalpha():
 
             return {'status':'error','message':'CPF não pode incluir letras'}
@@ -85,15 +93,15 @@ def add(
         return {'status':'error','message':'CPF já cadastrado'}
 
     new_patient = Patient(
-        name = pt_create.name,
-        age = pt_create.age,
-        cpf = pt_create.cpf,
-        phone= pt_create.phone,
-        status = pt_create.status.lower(),
-        amount = pt_create.amount,
-        appointment= pt_create.appointment,
-        modality = pt_create.modality,
-        note = pt_create.note,
+        name = name,
+        age = age,
+        cpf = cpf,
+        phone= phone,
+        status = status.lower(),
+        amount = amount,
+        appointment= appointment,
+        modality = modality,
+        note = note,
         user_id= user.id
     )
 
