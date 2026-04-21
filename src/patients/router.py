@@ -1,7 +1,6 @@
 from fastapi import APIRouter , Form , Depends  , HTTPException
 from src.database.connection import get_db
 from src.patients.model import Patient
-from pydantic import BaseModel
 from src.users.model import User
 from src.patients.controller import PatientController
 from sqlalchemy.orm import Session
@@ -10,33 +9,6 @@ from src.users.router import get_current_user
 router = APIRouter()
 
 # -------- Making the class patient models right here ---
-
-class PatientCreate(BaseModel):
-
-    name:str
-    age:int
-    cpf:str
-    phone:str
-    status:str
-    amount:float
-    appointment:str
-    modality:str
-    note:str
-
-
-class PatientUpdate(BaseModel):
-
-    name:str
-    age:int
-    cpf:str
-    phone:str
-    status:str
-    amount:float
-    appointment:str
-    modality:str
-    note:str
-
-
 
 
 def get_current_patient(
@@ -120,13 +92,21 @@ def delete(
 @router.put('/update')
 def update(
         patient_id:int,
-        new_update:PatientUpdate,
+        name:str = Form(...),
+        age:int = Form(...),
+        cpf:str = Form(...),
+        phone:str = Form(...),
+        status:str = Form(None),
+        amount:float = Form(None),
+        appointment:str = Form(None),
+        modality:str = Form(None),
+        note:str = Form(None),
         user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
 ):
 
     patient = get_current_patient(patient_id, db)
     return PatientController.update(patient.id, user.id,
-                                    new_update.name, new_update.age, new_update.cpf, new_update.phone, new_update.status,new_update.amount,new_update.appointment,new_update.modality,
-                                    new_update.note,db)
+                                    name, age,cpf, phone,status,amount,appointment,modality,
+                                    note,db)
 
